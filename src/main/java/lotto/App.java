@@ -39,16 +39,22 @@ public class App {
     }
 
     public static void initLottos() {
-        int numOfLotto = purchasingAmount / LOTTO_PRICE;
-        System.out.println(numOfLotto + "개를 구매했습니다.");
-        for (int i = 0; i < numOfLotto; i++) {
+        for (int i = 0; i < purchasingAmount/LOTTO_PRICE; i++) {
             lottos.add(new Lotto(new ArrayList<>()));
+        }
+    }
+
+    public static void printLottos(){
+        System.out.println(purchasingAmount/LOTTO_PRICE + "개를 구매했습니다.");
+        for(Lotto lotto : lottos){
+            System.out.println(lotto.getNumbers().toString());
         }
     }
 
     public static void main(String[] args) {
         setPurchasingAmount();
         initLottos();
-        lottos.forEach(lotto -> System.out.println(lotto.getNumbers().toString()));
+        printLottos();
+
     }
 }
