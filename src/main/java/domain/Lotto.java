@@ -6,9 +6,9 @@ import java.util.List;
  * 로또 한장을 의미하는 객체
  */
 public class Lotto {
-    private final int RANDOM_MAX = 45;
-    private final int RANDOM_MIN = 1;
-    private final int LOTTO_LENGTH = 6;
+    public static final int RANDOM_MAX = 45;
+    public static final int RANDOM_MIN = 1;
+    public static final int LOTTO_LENGTH = 6;
 
     private final List<Integer> numbers;
 
