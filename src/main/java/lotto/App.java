@@ -1,33 +1,23 @@
 package lotto;
 
 import domain.Lotto;
+import domain.Rank;
 import domain.WinningLotto;
 
+import java.awt.font.LayoutPath;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static domain.Lotto.*;
+import static lotto.Validator.*;
 
 public class App {
-    private static final int LOTTO_PRICE = 1000;
+    public static final int LOTTO_PRICE = 1000;
     private static final Scanner sc = new Scanner(System.in);
     private static final List<Lotto> lottos = new ArrayList<>();
     private static List<Integer> answers = new ArrayList<>();
-    private static WinningLotto winningLotto;
+    private static HashMap<Rank, Integer> result = new HashMap<>();
     private static int purchasingAmount;
     private static int bonusNum;
-
-    public static boolean checkPurchasingAmount(int purchasingAmount) {
-        if (purchasingAmount < LOTTO_PRICE) {
-            System.out.println("구입 금액은 최소 천원 이상이어야 합니다.");
-            return false;
-        }
-        if (purchasingAmount % LOTTO_PRICE != 0) {
-            System.out.println("구입 금액은 1000원 단위로만 가능합니다.");
-            return false;
-        }
-        return true;
-    }
 
     public static void setPurchasingAmount() {
         do {
@@ -40,6 +30,18 @@ public class App {
                 sc.nextLine(); //Scanner 버그 방지용 코드
             }
         } while (!checkPurchasingAmount(purchasingAmount));
+    }
+
+    public static void setAnswers() {
+        do {
+            System.out.println("지난 주 당첨 번호를 입력해 주세요.");
+            answers = Arrays.stream(sc.nextLine().split(","))
+                    .map(String::trim).map(Integer::parseInt).distinct()
+                    .collect(Collectors.toList());
+        } while (!checkAnswers(answers));
+        do {
+            System.out.println("보너스 볼을 입력해 주세요.");
+        } while (!checkBonusNum(answers, bonusNum = sc.nextInt()));
     }
 
     public static void initLottos() {
@@ -55,46 +57,15 @@ public class App {
         }
     }
 
-    public static boolean checkAnswers(List<Integer> answers) {
-        if (answers.size() != LOTTO_LENGTH) {
-            System.out.println("당첨 번호는 6개이어야 합니다. (중복된 숫자 없는지 확인)");
-            return false;
+    public static void initForPrint() {
+        WinningLotto winningLotto = new WinningLotto(new Lotto(answers), bonusNum);
+        for(Rank rank : Rank.values()){
+            result.put(rank, 0);
         }
-        for (Integer integer : answers) {
-            if (integer > RANDOM_MAX || integer < RANDOM_MIN) {
-                System.out.println("1~45 사이의 값을 입력해 주세요. ");
-                return false;
-            }
+        for(Lotto lotto : lottos){
+            Rank rank = winningLotto.match(lotto);
+            result.put(rank, result.get(rank)+1);
         }
-        return true;
-    }
-
-    public static boolean checkBonusNum(int bonusNum) {
-        if (bonusNum > RANDOM_MAX || bonusNum < RANDOM_MIN) {
-            System.out.println("1~45 사이의 값을 입력해 주세요. ");
-            return false;
-        }
-        if (answers.contains(bonusNum)) {
-            System.out.println("지난 주 당첨 번호에 이미 보너스 넘버가 포함되어 있습니다. ");
-            return false;
-        }
-        return true;
-    }
-
-    public static void setAnswers() {
-        do {
-            System.out.println("지난 주 당첨 번호를 입력해 주세요.");
-            answers = Arrays.stream(sc.nextLine().split(","))
-                    .map(String::trim).map(Integer::parseInt).distinct()
-                    .collect(Collectors.toList());
-        } while (!checkAnswers(answers));
-        do {
-            System.out.println("보너스 볼을 입력해 주세요.");
-        } while (!checkBonusNum(bonusNum = sc.nextInt()));
-    }
-
-    public static void createWinningLotto(){
-        winningLotto = new WinningLotto(new Lotto(answers), bonusNum);
     }
 
     public static void main(String[] args) {
@@ -102,6 +73,6 @@ public class App {
         initLottos();
         printLottos();
         setAnswers();
-        createWinningLotto();
+        initForPrint();
     }
 }
