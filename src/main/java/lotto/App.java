@@ -4,7 +4,6 @@ import domain.Lotto;
 import domain.Rank;
 import domain.WinningLotto;
 
-import java.awt.font.LayoutPath;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,6 +17,7 @@ public class App {
     private static HashMap<Rank, Integer> result = new HashMap<>();
     private static int purchasingAmount;
     private static int bonusNum;
+    private static int prizeMoney;
 
     public static void setPurchasingAmount() {
         do {
@@ -59,13 +59,32 @@ public class App {
 
     public static void initForPrint() {
         WinningLotto winningLotto = new WinningLotto(new Lotto(answers), bonusNum);
-        for(Rank rank : Rank.values()){
+        for (Rank rank : Rank.values()) {
             result.put(rank, 0);
         }
-        for(Lotto lotto : lottos){
+        for (Lotto lotto : lottos) {
             Rank rank = winningLotto.match(lotto);
-            result.put(rank, result.get(rank)+1);
+            result.put(rank, result.get(rank) + 1);
         }
+    }
+
+    public static void printRankCount() {
+        System.out.println("---- 당첨 통계 ----");
+        result.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.reverseOrder())).
+                filter(entry -> entry.getKey() != Rank.MISS).forEach(entry -> {
+            StringBuilder resultforOneRank = new StringBuilder();
+            resultforOneRank.append(entry.getKey().getCountOfMatch() + "개 일치");
+            if (entry.getKey() == Rank.SECOND) {
+                resultforOneRank.append(", 보너스볼 일치");
+            }
+            System.out.println(resultforOneRank + "(" + entry.getKey().getWinningMoney() + ")" + " - " + entry.getValue() + "개");
+            prizeMoney += entry.getKey().getWinningMoney() * entry.getValue();
+        });
+    }
+
+    public static void printRateOfReturn() {
+        float rateOfReturn = (float) prizeMoney / (float) purchasingAmount;
+        System.out.println("총 수익률은 " + rateOfReturn + "입니다. ");
     }
 
     public static void main(String[] args) {
@@ -74,5 +93,7 @@ public class App {
         printLottos();
         setAnswers();
         initForPrint();
+        printRankCount();
+        printRateOfReturn();
     }
 }
