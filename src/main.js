@@ -1,5 +1,6 @@
 const { body } = document
 const LOTTO_MAX_NUMBER = 45
+const LOTTO_LENGTH = 6
 
 const lottoNumbers = []
 for (let i = 0; i < LOTTO_MAX_NUMBER; i++) {
@@ -27,18 +28,20 @@ const getLottoCount = (price) => {
 }
 
 const setLotto = (lottoCount, lottos) => {
-  const LOTTO_LENGTH = 6
   for (let i = 0; i < lottoCount; i++) {
-    lottoArr = [...lottoNumbers]
-    lottoTempArr = []
-    for (let j = 0; j < LOTTO_LENGTH; j++) {
-      const randomNumber = Math.floor(Math.random() * (LOTTO_MAX_NUMBER - j))
-      const chosen = lottoArr.splice(randomNumber, 1)[0]
-      lottoTempArr.push(Number(chosen))
-    }
-    lottoTempArr.sort((a, b) => a - b)
-    lottos[i] = new Lotto(lottoTempArr)
+    lottos[i] = new Lotto(setRandomNumber().sort((a, b) => a - b))
   }
+}
+
+const setRandomNumber = () => {
+  let lottoArr = [...lottoNumbers]
+  lottoTempArr = []
+  for (let j = 0; j < LOTTO_LENGTH; j++) {
+    const randomNumber = Math.floor(Math.random() * (LOTTO_MAX_NUMBER - j))
+    const chosen = lottoArr.splice(randomNumber, 1)[0]
+    lottoTempArr.push(Number(chosen))
+  }
+  return lottoTempArr
 }
 
 const matchLottos = (myLottos, winningLotto) => {
