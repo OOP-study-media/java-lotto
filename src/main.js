@@ -72,7 +72,7 @@ const checkInputValue = (lottos, bonusBall) => {
   for (let i = 0; i < lottos.length; i++) {
     tempSet.add(lottos[i])
   }
-  if (tempSet.length !== 6) return false
+  if (tempSet.size !== 6) return false
   if (lottos.indexOf(bonusBall) >= 0) return false
   return true
 }
