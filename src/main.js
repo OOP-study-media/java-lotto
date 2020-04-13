@@ -1,4 +1,10 @@
 const { body } = document
+const LOTTO_MAX_NUMBER = 45
+const lottoNumbers = []
+for (let i = 0; i < LOTTO_MAX_NUMBER; i++) {
+  lottoNumbers.push(i + 1)
+}
+
 let result = '<br/>실행결과<br/>'
 
 const makeDescription = (string, parrentElem) => {
@@ -9,6 +15,21 @@ const makeDescription = (string, parrentElem) => {
 
 const getLottoCount = (price) => {
   return price.match(/\d+(?=000)/g)[0]
+}
+
+const setLotto = (lottoCount, lottos) => {
+  const LOTTO_LENGTH = 6
+  for (let i = 0; i < lottoCount; i++) {
+    lottoArr = [...lottoNumbers]
+    lottoTempArr = []
+    for (let j = 0; j < LOTTO_LENGTH; j++) {
+      const randomNumber = Math.floor(Math.random() * (LOTTO_MAX_NUMBER - j))
+      const chosen = lottoArr.splice(randomNumber, 1)[0]
+      lottoTempArr.push(Number(chosen))
+    }
+    lottoTempArr.sort((a, b) => a - b)
+    lottos[i] = lottoTempArr
+  }
 }
 
 const priceForm = document.createElement('form')
@@ -52,7 +73,14 @@ conditionForm.append(conditionButton)
 priceForm.addEventListener('submit', (e) => {
   e.preventDefault()
   const lottoCount = getLottoCount(priceInput.value)
+  const myLottos = []
+  setLotto(lottoCount, myLottos)
+  let result = ''
   makeDescription(`${lottoCount}개를 구매했습니다.`, priceForm)
+  for (let i = 0; i < lottoCount; i++) {
+    result += `${myLottos[i]}<br/>`
+  }
+  makeDescription(`${result}`, priceForm)
   conditionForm.style.display = 'block'
 })
 
