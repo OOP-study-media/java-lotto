@@ -24,39 +24,30 @@ const makeDescription = (string, parrentElem) => {
 }
 
 const getLottoCount = (price) => {
-  return price % 1000 === 0 ? price / 1000 : false
+  return price % 1000 === 0 ? price / 1000 : 0
 }
 
 const setLotto = (lottoCount, lottos) => {
   for (let i = 0; i < lottoCount; i++) {
-    lottos[i] = new Lotto(setRandomNumber().sort((a, b) => a - b))
+    lottos[i] = new Lotto(setRandomNumbers().sort((a, b) => a - b))
   }
 }
 
-const setRandomNumber = () => {
+const setRandomNumbers = () => {
   let tempLottoNumbers = [...lottoNumbers]
-  resultNumber = []
+  resultNumbers = []
   for (let j = 0; j < LOTTO_LENGTH; j++) {
     const randomNumber = Math.floor(Math.random() * (LOTTO_MAX_NUMBER - j))
     const chosen = tempLottoNumbers.splice(randomNumber, 1)[0]
-    resultNumber.push(Number(chosen))
+    resultNumbers.push(Number(chosen))
   }
-  return resultNumber
+  return resultNumbers
 }
 
 const matchLottos = (myLottos, winningLotto) => {
   for (let i = 0; i < myLottos.length; i++) {
-    matchOneLotto(i, myLottos, winningLotto)
+    rank[winningLotto.match(myLottos[i])]++
   }
-}
-
-const matchOneLotto = (i, myLottos, winningLotto) => {
-  if (winningLotto.match(myLottos[i]) === 1) return rank['FIRST']++
-  if (winningLotto.match(myLottos[i]) === 2) return rank['SECOND']++
-  if (winningLotto.match(myLottos[i]) === 3) return rank['THIRD']++
-  if (winningLotto.match(myLottos[i]) === 4) return rank['FOURTH']++
-  if (winningLotto.match(myLottos[i]) === 5) return rank['FIFTH']++
-  return rank['MISS']++
 }
 
 const checkInputValue = (lottos, bonusBall) => {
