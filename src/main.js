@@ -34,14 +34,14 @@ const setLotto = (lottoCount, lottos) => {
 }
 
 const setRandomNumber = () => {
-  let lottoArr = [...lottoNumbers]
-  lottoTempArr = []
+  let tempLottoNumbers = [...lottoNumbers]
+  resultNumber = []
   for (let j = 0; j < LOTTO_LENGTH; j++) {
     const randomNumber = Math.floor(Math.random() * (LOTTO_MAX_NUMBER - j))
-    const chosen = lottoArr.splice(randomNumber, 1)[0]
-    lottoTempArr.push(Number(chosen))
+    const chosen = tempLottoNumbers.splice(randomNumber, 1)[0]
+    resultNumber.push(Number(chosen))
   }
-  return lottoTempArr
+  return resultNumber
 }
 
 const matchLottos = (myLottos, winningLotto) => {
