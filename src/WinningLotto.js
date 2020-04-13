@@ -19,10 +19,10 @@ class WinningLotto {
     })
     userLotto.numbers.indexOf(this.bonusNo) >= 0 && bonusCount++
     if (count === 6) return 1
-    else if (count === 5 && bonusCount) return 2
-    else if (count + bonusCount === 5) return 3
-    else if (count + bonusCount === 4) return 4
-    else if (count + bonusCount === 3) return 5
-    else return -1
+    if (count === 5 && bonusCount) return 2
+    if (count + bonusCount === 5) return 3
+    if (count + bonusCount === 4) return 4
+    if (count + bonusCount === 3) return 5
+    return -1
   }
 }

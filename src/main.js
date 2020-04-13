@@ -48,17 +48,26 @@ const matchLottos = (myLottos, winningLotto) => {
 const matchOneLotto = (i, myLottos, winningLotto) => {
   if (winningLotto.match(myLottos[i]) === 1) {
     obj['FIRST']++
-  } else if (winningLotto.match(myLottos[i]) === 2) {
-    obj['SECOND']++
-  } else if (winningLotto.match(myLottos[i]) === 3) {
-    obj['THIRD']++
-  } else if (winningLotto.match(myLottos[i]) === 4) {
-    obj['FOURTH']++
-  } else if (winningLotto.match(myLottos[i]) === 5) {
-    obj['FIFTH']++
-  } else {
-    obj['MISS']++
+    return
   }
+  if (winningLotto.match(myLottos[i]) === 2) {
+    obj['SECOND']++
+    return
+  }
+  if (winningLotto.match(myLottos[i]) === 3) {
+    obj['THIRD']++
+    return
+  }
+  if (winningLotto.match(myLottos[i]) === 4) {
+    obj['FOURTH']++
+    return
+  }
+  if (winningLotto.match(myLottos[i]) === 5) {
+    obj['FIFTH']++
+    return
+  }
+  obj['MISS']++
+  return
 }
 
 const checkInputValue = (lottos, bonusBall) => {
@@ -126,7 +135,6 @@ priceForm.addEventListener('submit', (e) => {
   let result = ''
   makeDescription(`<br/>${lottoCount}개를 구매했습니다.`, priceForm)
   for (let i = 0; i < lottoCount; i++) {
-    console.log(myLottos[i])
     result += `[${myLottos[i].numbers.join(', ')}]<br/>`
   }
   makeDescription(`${result}`, priceForm)
