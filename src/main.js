@@ -4,8 +4,15 @@ const lottoNumbers = []
 for (let i = 0; i < LOTTO_MAX_NUMBER; i++) {
   lottoNumbers.push(i + 1)
 }
-
-let result = '<br/>실행결과<br/>'
+const myLottos = []
+const obj = {
+  FIRST: 0,
+  SECOND: 0,
+  THIRD: 0,
+  FOURTH: 0,
+  FIFTH: 0,
+  MISS: 0,
+}
 
 const makeDescription = (string, parrentElem) => {
   const description = document.createElement('div')
@@ -14,7 +21,7 @@ const makeDescription = (string, parrentElem) => {
 }
 
 const getLottoCount = (price) => {
-  return price.match(/\d+(?=000)/g)[0]
+  return price % 1000 === 0 ? price / 1000 : false
 }
 
 const setLotto = (lottoCount, lottos) => {
@@ -28,7 +35,25 @@ const setLotto = (lottoCount, lottos) => {
       lottoTempArr.push(Number(chosen))
     }
     lottoTempArr.sort((a, b) => a - b)
-    lottos[i] = lottoTempArr
+    lottos[i] = new Lotto(lottoTempArr)
+  }
+}
+
+const matchLotto = (myLottos, winningLotto) => {
+  for (let i = 0; i < myLottos.length; i++) {
+    if (winningLotto.match(myLottos[i]) === 1) {
+      obj['FIRST']++
+    } else if (winningLotto.match(myLottos[i]) === 2) {
+      obj['SECOND']++
+    } else if (winningLotto.match(myLottos[i]) === 3) {
+      obj['THIRD']++
+    } else if (winningLotto.match(myLottos[i]) === 4) {
+      obj['FOURTH']++
+    } else if (winningLotto.match(myLottos[i]) === 5) {
+      obj['FIFTH']++
+    } else {
+      obj['MISS']++
+    }
   }
 }
 
@@ -72,13 +97,17 @@ conditionForm.append(conditionButton)
 
 priceForm.addEventListener('submit', (e) => {
   e.preventDefault()
+  if (!getLottoCount(priceInput.value)) {
+    makeDescription('에러. ', priceForm)
+    return
+  }
   const lottoCount = getLottoCount(priceInput.value)
-  const myLottos = []
   setLotto(lottoCount, myLottos)
   let result = ''
   makeDescription(`${lottoCount}개를 구매했습니다.`, priceForm)
   for (let i = 0; i < lottoCount; i++) {
-    result += `${myLottos[i]}<br/>`
+    console.log(myLottos[i])
+    result += `${myLottos[i].numbers}<br/>`
   }
   makeDescription(`${result}`, priceForm)
   conditionForm.style.display = 'block'
@@ -86,5 +115,10 @@ priceForm.addEventListener('submit', (e) => {
 
 conditionForm.addEventListener('submit', (e) => {
   e.preventDefault()
-  console.log('thi')
+  const winningLotto = new WinningLotto(
+    new Lotto(lottoNumberInput.value.split(',').map((item) => Number(item))),
+    Number(bonusBallInput.value)
+  )
+  matchLotto(myLottos, winningLotto)
+  console.log(obj)
 })

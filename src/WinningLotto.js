@@ -11,7 +11,18 @@ class WinningLotto {
   }
 
   match(userLotto) {
-    // TODO 로직 구현
-    return null
+    let count = 0
+    let bonusCount = 0
+    this.lotto.numbers
+    this.lotto.numbers.map((number) => {
+      userLotto.numbers.indexOf(number) >= 0 && count++
+    })
+    userLotto.numbers.indexOf(this.bonusNo) >= 0 && bonusCount++
+    if (count === 6) return 1
+    else if (count === 5 && bonusCount) return 2
+    else if (count + bonusCount === 5) return 3
+    else if (count + bonusCount === 4) return 4
+    else if (count + bonusCount === 3) return 5
+    else return -1
   }
 }
