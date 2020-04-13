@@ -1,11 +1,13 @@
 const { body } = document
 const LOTTO_MAX_NUMBER = 45
+
 const lottoNumbers = []
 for (let i = 0; i < LOTTO_MAX_NUMBER; i++) {
   lottoNumbers.push(i + 1)
 }
+
 const myLottos = []
-const obj = {
+const rank = {
   FIRST: 0,
   SECOND: 0,
   THIRD: 0,
@@ -47,26 +49,26 @@ const matchLottos = (myLottos, winningLotto) => {
 
 const matchOneLotto = (i, myLottos, winningLotto) => {
   if (winningLotto.match(myLottos[i]) === 1) {
-    obj['FIRST']++
+    rank['FIRST']++
     return
   }
   if (winningLotto.match(myLottos[i]) === 2) {
-    obj['SECOND']++
+    rank['SECOND']++
     return
   }
   if (winningLotto.match(myLottos[i]) === 3) {
-    obj['THIRD']++
+    rank['THIRD']++
     return
   }
   if (winningLotto.match(myLottos[i]) === 4) {
-    obj['FOURTH']++
+    rank['FOURTH']++
     return
   }
   if (winningLotto.match(myLottos[i]) === 5) {
-    obj['FIFTH']++
+    rank['FIFTH']++
     return
   }
-  obj['MISS']++
+  rank['MISS']++
   return
 }
 
@@ -153,17 +155,17 @@ conditionForm.addEventListener('submit', (e) => {
   )
   matchLottos(myLottos, winningLotto)
   let result = '<br/>당첨통계<br/>--------<br/>'
-  const fifthText = `3개일치(5000원)- ${obj['FIFTH']}개<br/>`
-  const fourthText = `4개일치(50000원)- ${obj['FOURTH']}개<br/>`
-  const thirdText = `5개일치(1500000원)- ${obj['THIRD']}개<br/>`
-  const secondText = `5개일치, 보너스 볼 일치(30000000원)- ${obj['SECOND']}개<br/>`
-  const firstText = `6개일치(2000000000원)- ${obj['FIRST']}개<br/>`
+  const fifthText = `3개일치(5000원)- ${rank['FIFTH']}개<br/>`
+  const fourthText = `4개일치(50000원)- ${rank['FOURTH']}개<br/>`
+  const thirdText = `5개일치(1500000원)- ${rank['THIRD']}개<br/>`
+  const secondText = `5개일치, 보너스 볼 일치(30000000원)- ${rank['SECOND']}개<br/>`
+  const firstText = `6개일치(2000000000원)- ${rank['FIRST']}개<br/>`
   const totalSum =
-    obj['FIFTH'] * 5000 +
-    obj['FOURTH'] * 50000 +
-    obj['THIRD'] * 1500000 +
-    obj['SECOND'] * 30000000 +
-    obj['FIRST'] * 2000000000
+    rank['FIFTH'] * 5000 +
+    rank['FOURTH'] * 50000 +
+    rank['THIRD'] * 1500000 +
+    rank['SECOND'] * 30000000 +
+    rank['FIRST'] * 2000000000
   const lastText = `총 수익률은 ${totalSum / priceInput.value}입니다.`
   result += fifthText + fourthText + thirdText + secondText + firstText + lastText
 
