@@ -51,28 +51,12 @@ const matchLottos = (myLottos, winningLotto) => {
 }
 
 const matchOneLotto = (i, myLottos, winningLotto) => {
-  if (winningLotto.match(myLottos[i]) === 1) {
-    rank['FIRST']++
-    return
-  }
-  if (winningLotto.match(myLottos[i]) === 2) {
-    rank['SECOND']++
-    return
-  }
-  if (winningLotto.match(myLottos[i]) === 3) {
-    rank['THIRD']++
-    return
-  }
-  if (winningLotto.match(myLottos[i]) === 4) {
-    rank['FOURTH']++
-    return
-  }
-  if (winningLotto.match(myLottos[i]) === 5) {
-    rank['FIFTH']++
-    return
-  }
-  rank['MISS']++
-  return
+  if (winningLotto.match(myLottos[i]) === 1) return rank['FIRST']++
+  if (winningLotto.match(myLottos[i]) === 2) return rank['SECOND']++
+  if (winningLotto.match(myLottos[i]) === 3) return rank['THIRD']++
+  if (winningLotto.match(myLottos[i]) === 4) return rank['FOURTH']++
+  if (winningLotto.match(myLottos[i]) === 5) return rank['FIFTH']++
+  return rank['MISS']++
 }
 
 const checkInputValue = (lottos, bonusBall) => {

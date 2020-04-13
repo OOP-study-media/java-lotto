@@ -13,7 +13,6 @@ class WinningLotto {
   match(userLotto) {
     let count = 0
     let bonusCount = 0
-    this.lotto.numbers
     this.lotto.numbers.map((number) => {
       userLotto.numbers.indexOf(number) >= 0 && count++
     })
