@@ -7,19 +7,21 @@ import domain.WinningLotto;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static domain.Lotto.*;
 import static lotto.Validator.*;
 
 public class App {
     public static final int LOTTO_PRICE = 1000;
+
     private static final Scanner sc = new Scanner(System.in);
     private static final List<Lotto> lottos = new ArrayList<>();
     private static List<Integer> answers = new ArrayList<>();
-    private static HashMap<Rank, Integer> result = new HashMap<>();
+    private static Map<Rank, Integer> result = new TreeMap<>();
     private static int purchasingAmount;
     private static int bonusNum;
     private static int prizeMoney;
 
-    public static void setPurchasingAmount() {
+    private static void setPurchasingAmount() {
         do {
             System.out.println("구입 금액을 입력하세요.");
             try {
@@ -32,32 +34,50 @@ public class App {
         } while (!checkPurchasingAmount(purchasingAmount));
     }
 
-    public static void setAnswers() {
+    private static void initLottos() {
+        for (int i = 0; i < purchasingAmount / LOTTO_PRICE; i++) {
+            lottos.add(new Lotto(createNumbers()));
+        }
+    }
+
+    private static List<Integer> createNumbers() {
+        List<Integer> numbers = new ArrayList<>();
+        while (numbers.size() < LOTTO_LENGTH) {
+            int randomNumber = (int) (Math.random() * RANDOM_MAX + RANDOM_MIN);
+            addRandomNum(numbers, randomNumber);
+        }
+        return numbers;
+    }
+
+    private static void addRandomNum(List<Integer> numbers, int randomNumber) {
+        if (!numbers.contains(randomNumber)) {
+            numbers.add(randomNumber);
+        }
+    }
+
+    private static void setAnswers() {
         do {
             System.out.println("지난 주 당첨 번호를 입력해 주세요.");
-            answers = Arrays.stream(sc.nextLine().split(","))
-                    .map(String::trim).map(Integer::parseInt).distinct()
+            answers = Arrays.stream(sc.nextLine()
+                    .split(","))
+                    .map(String::trim)
+                    .map(Integer::parseInt).distinct()
                     .collect(Collectors.toList());
         } while (!checkAnswers(answers));
+    }
+
+    private static void setBonusNum() {
         do {
             System.out.println("보너스 볼을 입력해 주세요.");
         } while (!checkBonusNum(answers, bonusNum = sc.nextInt()));
     }
 
-    public static void initLottos() {
-        for (int i = 0; i < purchasingAmount / LOTTO_PRICE; i++) {
-            lottos.add(new Lotto(new ArrayList<>()));
-        }
-    }
-
-    public static void printLottos() {
+    private static void printLottos() {
         System.out.println(purchasingAmount / LOTTO_PRICE + "개를 구매했습니다.");
-        for (Lotto lotto : lottos) {
-            System.out.println(lotto.getNumbers().toString());
-        }
+        lottos.forEach(Lotto::printOnetLotto);
     }
 
-    public static void initForPrint() {
+    private static void initForPrint() {
         WinningLotto winningLotto = new WinningLotto(new Lotto(answers), bonusNum);
         for (Rank rank : Rank.values()) {
             result.put(rank, 0);
@@ -68,21 +88,27 @@ public class App {
         }
     }
 
-    public static void printRankCount() {
+    private static void printRankCount() {
         System.out.println("---- 당첨 통계 ----");
-        result.entrySet().stream().sorted(Map.Entry.comparingByKey(Comparator.reverseOrder())).
-                filter(entry -> entry.getKey() != Rank.MISS).forEach(entry -> {
-            StringBuilder resultforOneRank = new StringBuilder();
-            resultforOneRank.append(entry.getKey().getCountOfMatch() + "개 일치");
-            if (entry.getKey() == Rank.SECOND) {
-                resultforOneRank.append(", 보너스볼 일치");
-            }
-            System.out.println(resultforOneRank + "(" + entry.getKey().getWinningMoney() + ")" + " - " + entry.getValue() + "개");
-            prizeMoney += entry.getKey().getWinningMoney() * entry.getValue();
-        });
+        result.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey() != Rank.MISS)
+                .forEach(entry -> {
+                    printOneRank(entry);
+                    prizeMoney += entry.getKey().getWinningMoney() * entry.getValue();
+                });
     }
 
-    public static void printRateOfReturn() {
+    private static void printOneRank(Map.Entry<Rank, Integer> oneRank) {
+        StringBuilder resultForOneRank = new StringBuilder();
+        resultForOneRank.append(oneRank.getKey().getCountOfMatch()).append("개 일치");
+        if (oneRank.getKey() == Rank.SECOND) {
+            resultForOneRank.append(", 보너스볼 일치");
+        }
+        System.out.println(resultForOneRank + "(" + oneRank.getKey().getWinningMoney() + ")" + " - " + oneRank.getValue() + "개");
+    }
+
+    private static void printRateOfReturn() {
         float rateOfReturn = (float) prizeMoney / (float) purchasingAmount;
         System.out.println("총 수익률은 " + rateOfReturn + "입니다. ");
     }
@@ -92,6 +118,7 @@ public class App {
         initLottos();
         printLottos();
         setAnswers();
+        setBonusNum();
         initForPrint();
         printRankCount();
         printRateOfReturn();
