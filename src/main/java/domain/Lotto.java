@@ -8,6 +8,7 @@ import java.util.Random;
  * 로또 한장을 의미하는 객체
  */
 public class Lotto {
+
     private static final int RANGE = 45;
     private static final int SELECT_NUMBER_LENGTH = 6;
 
@@ -31,4 +32,11 @@ public class Lotto {
         System.out.println(numbers);
     }
 
+    public boolean containsNumber(int number) {
+        return numbers.contains(number);
+    }
+
+    public List<Integer> getNumbers() {
+        return numbers;
+    }
 }
