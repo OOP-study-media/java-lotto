@@ -43,4 +43,20 @@ public class Program {
         }
     }
 
+    private static List<Integer> inputNumbers() throws Exception {
+        System.out.println("지난 주 당첨 번호를 입력해 주세요.");
+
+        String[] input = br.readLine().split(",");
+        List<Integer> numbers = new ArrayList<>();
+
+        for (String inputNumber : input) {
+            numbers.add(Integer.parseInt(inputNumber));
+        }
+        return numbers;
+    }
+
+    private static int inputBonusBall() throws Exception {
+        return inputInt("보너스 볼을 입력해 주세요.");
+    }
+
 }
