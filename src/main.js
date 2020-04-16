@@ -1,6 +1,7 @@
 const { body } = document
 const LOTTO_MAX_NUMBER = 45
 const LOTTO_LENGTH = 6
+const LOTTO_PRICE = 1000
 
 const lottoNumbers = []
 for (let i = 0; i < LOTTO_MAX_NUMBER; i++) {
@@ -24,7 +25,7 @@ const makeDescription = (string, parrentElem) => {
 }
 
 const getLottoCount = (price) => {
-  return price % 1000 === 0 ? price / 1000 : 0
+  return price % LOTTO_PRICE === 0 ? price / LOTTO_PRICE : 0
 }
 
 const setLotto = (lottoCount, lottos) => {
@@ -53,15 +54,15 @@ const matchLottos = (myLottos, winningLotto) => {
 const checkInputValue = (lottos, bonusBall) => {
   let tempSet = new Set()
   lottos = lottos.split(',')
-  if (lottos.length !== 6) return false
-  if (bonusBall > 45 || bonusBall <= 0) return false
+  if (lottos.length !== LOTTO_LENGTH) return false
+  if (bonusBall > LOTTO_MAX_NUMBER || bonusBall <= 0) return false
   lottos.map((item) => {
-    if (item > 45 || item <= 0) return false
+    if (item > LOTTO_MAX_NUMBER || item <= 0) return false
   })
   for (let i = 0; i < lottos.length; i++) {
     tempSet.add(lottos[i])
   }
-  if (tempSet.size !== 6) return false
+  if (tempSet.size !== LOTTO_LENGTH) return false
   if (lottos.indexOf(bonusBall) >= 0) return false
   return true
 }
