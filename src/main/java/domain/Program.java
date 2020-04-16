@@ -11,39 +11,37 @@ public class Program {
 
     public static void main(String[] args) throws Exception {
         int purchaseCount = inputPrice() / PRICE;
-        List<Lotto> lottoList = setupLottoList(purchaseCount);
-        printLottoList(lottoList);
+        List<Lotto> lottoTickets = setupLottoTickets(purchaseCount);
+        printLottoTickets(lottoTickets);
 
         WinningLotto winningLotto = new WinningLotto(new Lotto(inputNumbers()), inputBonusBall());
 
-        TreeMap<Rank, Integer> rankMap = setupRankMap(lottoList, winningLotto);
-        printRank(rankMap);
-        printRate(rankMap, purchaseCount);
+        TreeMap<Rank, Integer> rankCount = setupRankCount(lottoTickets, winningLotto);
+        printRank(rankCount);
+        printRate(rankCount, purchaseCount);
     }
 
     private static int inputPrice() throws Exception {
         return inputInt("구입금액을 입력해 주세요.");
     }
 
-    private static int inputInt(String print) throws Exception {
-        System.out.println(print);
+    private static int inputInt(String inputMessage) throws Exception {
+        System.out.println(inputMessage);
         return Integer.parseInt(br.readLine());
     }
 
-    private static List<Lotto> setupLottoList(int count) {
-        List<Lotto> lottoList = new ArrayList<>();
+    private static List<Lotto> setupLottoTickets(int count) {
+        List<Lotto> lottoTickets = new ArrayList<>();
         while (count != 0) {
-            Lotto lotto = new Lotto(new ArrayList<>());
-            lotto.randomNumbers();
-            lottoList.add(lotto);
+            lottoTickets.add(new Lotto(Lotto.randomNumbers()));
             count--;
         }
-        return lottoList;
+        return lottoTickets;
     }
 
-    private static void printLottoList(List<Lotto> lottoList) {
-        System.out.println(lottoList.size() + "개를 구매했습니다");
-        for (Lotto lotto : lottoList) {
+    private static void printLottoTickets(List<Lotto> lottoTickets) {
+        System.out.println(lottoTickets.size() + "개를 구매했습니다");
+        for (Lotto lotto : lottoTickets) {
             lotto.printNumbers();
         }
     }
@@ -64,34 +62,34 @@ public class Program {
         return inputInt("보너스 볼을 입력해 주세요.");
     }
 
-    private static TreeMap<Rank, Integer> setupRankMap(List<Lotto> lottoList, WinningLotto winningLotto) {
-        TreeMap<Rank, Integer> rankMap = initRankMap();
-        for (Lotto userLotto : lottoList) {
+    private static TreeMap<Rank, Integer> setupRankCount(List<Lotto> lottoTickets, WinningLotto winningLotto) {
+        TreeMap<Rank, Integer> rankCount = initRankCount();
+        for (Lotto userLotto : lottoTickets) {
             Rank rank = winningLotto.match(userLotto);
-            rankMap.put(rank, rankMap.get(rank) + 1);
+            rankCount.put(rank, rankCount.get(rank) + 1);
         }
-        return rankMap;
+        return rankCount;
     }
 
-    private static TreeMap<Rank, Integer> initRankMap() {
-        TreeMap<Rank, Integer> rankMap = new TreeMap<>(new rankComparator());
+    private static TreeMap<Rank, Integer> initRankCount() {
+        TreeMap<Rank, Integer> rankCount = new TreeMap<>(new rankComparator());
         for (Rank rank : Rank.values()) {
-            rankMap.put(rank, 0);
+            rankCount.put(rank, 0);
         }
-        return rankMap;
+        return rankCount;
     }
 
-    private static void printRank(TreeMap<Rank, Integer> rankMap) {
+    private static void printRank(TreeMap<Rank, Integer> rankCount) {
         System.out.println("당첨 통계");
-        for (Map.Entry<Rank, Integer> rankEntry : rankMap.entrySet()) {
+        for (Map.Entry<Rank, Integer> rankEntry : rankCount.entrySet()) {
             Rank rank = rankEntry.getKey();
-            int rankCount = rankEntry.getValue();
+            int count = rankEntry.getValue();
 
-            System.out.println(appendRankString(rank, rankCount));
+            System.out.println(appendRankString(rank, count));
         }
     }
 
-    private static String appendRankString(Rank rank, int rankCount) {
+    private static String appendRankString(Rank rank, int count) {
         if (rank == Rank.MISS) {
             return "---------";
         }
@@ -100,16 +98,16 @@ public class Program {
         if (rank == Rank.SECOND) {
             rankString += ", 보너스 볼 일치 ";
         }
-        return rankString + "(" + rank.getWinningMoney() + "원)-" + rankCount + "개";
+        return rankString + "(" + rank.getWinningMoney() + "원)-" + count + "개";
     }
 
-    private static void printRate(TreeMap<Rank, Integer> rankMap, int purchaseCount) {
+    private static void printRate(TreeMap<Rank, Integer> rankCount, int purchaseCount) {
         float sum = 0;
 
-        for (Map.Entry<Rank, Integer> rankEntry : rankMap.entrySet()) {
+        for (Map.Entry<Rank, Integer> rankEntry : rankCount.entrySet()) {
             int winningMoney = rankEntry.getKey().getWinningMoney();
-            int rankCount = rankEntry.getValue();
-            sum += (winningMoney * rankCount);
+            int count = rankEntry.getValue();
+            sum += (winningMoney * count);
         }
         System.out.println("총 수익률은 " + (sum / PRICE) / purchaseCount + "입니다.");
     }

@@ -1,8 +1,6 @@
 package domain;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 로또 한장을 의미하는 객체
@@ -18,14 +16,14 @@ public class Lotto {
         this.numbers = numbers;
     }
 
-    public void randomNumbers() {
+    public static List<Integer> randomNumbers() {
         Random random = new Random();
-        HashSet<Integer> randomSet = new HashSet<>();
+        Set<Integer> randomNumbers = new HashSet<>();
 
-        while (randomSet.size() < SELECT_NUMBER_LENGTH) {
-            randomSet.add(random.nextInt(RANGE) + 1);
+        while (randomNumbers.size() < SELECT_NUMBER_LENGTH) {
+            randomNumbers.add(random.nextInt(RANGE) + 1);
         }
-        numbers.addAll(randomSet);
+        return new ArrayList<>(randomNumbers);
     }
 
     public void printNumbers() {
@@ -37,6 +35,6 @@ public class Lotto {
     }
 
     public List<Integer> getNumbers() {
-        return numbers;
+        return Collections.unmodifiableList(numbers);
     }
 }
