@@ -35,11 +35,11 @@ const setLotto = (lottoCount, lottos) => {
 }
 
 const setRandomNumbers = () => {
-  let tempLottoNumbers = [...lottoNumbers]
+  let takenLottoNumbers = [...lottoNumbers]
   resultNumbers = []
   for (let j = 0; j < LOTTO_LENGTH; j++) {
     const randomNumber = Math.floor(Math.random() * (LOTTO_MAX_NUMBER - j))
-    const chosen = tempLottoNumbers.splice(randomNumber, 1)[0]
+    const chosen = takenLottoNumbers.splice(randomNumber, 1)[0]
     resultNumbers.push(Number(chosen))
   }
   return resultNumbers
@@ -52,7 +52,7 @@ const matchLottos = (myLottos, winningLotto) => {
 }
 
 const checkInputValue = (lottos, bonusBall) => {
-  let tempSet = new Set()
+  let overlappingNumbers = new Set()
   lottos = lottos.split(',')
   if (lottos.length !== LOTTO_LENGTH) return false
   if (bonusBall > LOTTO_MAX_NUMBER || bonusBall <= 0) return false
@@ -60,9 +60,9 @@ const checkInputValue = (lottos, bonusBall) => {
     if (item > LOTTO_MAX_NUMBER || item <= 0) return false
   })
   for (let i = 0; i < lottos.length; i++) {
-    tempSet.add(lottos[i])
+    overlappingNumbers.add(lottos[i])
   }
-  if (tempSet.size !== LOTTO_LENGTH) return false
+  if (overlappingNumbers.size !== LOTTO_LENGTH) return false
   if (lottos.indexOf(bonusBall) >= 0) return false
   return true
 }
