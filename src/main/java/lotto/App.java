@@ -35,7 +35,8 @@ public class App {
     }
 
     private static void initLottos() {
-        for (int i = 0; i < purchasingAmount / LOTTO_PRICE; i++) {
+        int numberOfLotto = purchasingAmount / LOTTO_PRICE;
+        for (int i = 0; i < numberOfLotto; i++) {
             lottos.add(new Lotto(createNumbers()));
         }
     }
@@ -58,10 +59,10 @@ public class App {
     private static void setAnswers() {
         do {
             System.out.println("지난 주 당첨 번호를 입력해 주세요.");
-            answers = Arrays.stream(sc.nextLine()
-                    .split(","))
+            answers = Arrays.stream(sc.nextLine().split(","))
                     .map(String::trim)
-                    .map(Integer::parseInt).distinct()
+                    .map(Integer::parseInt)
+                    .distinct()
                     .collect(Collectors.toList());
         } while (!checkAnswers(answers));
     }
@@ -69,7 +70,8 @@ public class App {
     private static void setBonusNum() {
         do {
             System.out.println("보너스 볼을 입력해 주세요.");
-        } while (!checkBonusNum(answers, bonusNum = sc.nextInt()));
+            int bonusNum = sc.nextInt();
+        } while (!checkBonusNum(answers, bonusNum));
     }
 
     private static void printLottos() {
